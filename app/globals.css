@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root[data-theme="day"] {
+  --bg-main: #EFECE4;
+  --bg-card: #F7F5F0;
+  --bg-nav: #EFECE4;
+  --text-main: #132A1E;
+  --text-muted: #4A554E;
+  --border-color: #132A1E;
+  --court-sky: #E3E0D8;
+  --btn-drop-bg: #B8331A;
+  --saucy-fill: #E7CEB2;
+}
+
+:root[data-theme="night"] {
+  --bg-main: #0A0B0A;
+  --bg-card: #132219;
+  --bg-nav: #070807;
+  --text-main: #F5F5F3;
+  --text-muted: #A3B1A8;
+  --border-color: #263E30;
+  --court-sky: #090C0A;
+  --btn-drop-bg: #D92344;
+  --saucy-fill: #FFFFFF;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: background-color 0.35s ease, color 0.35s ease;
+  overflow-x: hidden;
+}
+
+.font-display {
+  font-family: 'Anton', sans-serif;
+  letter-spacing: 0.02em;
+}
+
+.font-bebas {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.04em;
+}
+
+.saucy-logo-text {
+  font-family: 'Permanent Marker', cursive;
+  color: var(--saucy-fill);
+  -webkit-text-stroke: 3px #140C08;
+  text-shadow:
+    0 4px 0 #140C08,
+    -2px -2px 0 #140C08,
+    2px -2px 0 #140C08,
+    -2px 2px 0 #140C08,
+    0 6px 0 #B8331A;
+  line-height: 0.88;
+}
+
+.saucy-hero-graffiti {
+  font-family: 'Permanent Marker', cursive;
+  color: var(--saucy-fill);
+  -webkit-text-stroke: 5px #110A06;
+  filter: drop-shadow(0px 6px 0px #110A06) drop-shadow(0px 10px 0px #C84316);
+  line-height: 0.85;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 26s linear infinite;
+}
+
+.bape-camo-border {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Crect width='220' height='220' fill='%238B9A71'/%3E%3Cpath d='M25,18 C45,10 68,25 60,48 C52,70 80,82 65,105 C50,128 18,115 12,88 C6,61 5,26 25,18 Z' fill='%234A5D36'/%3E%3Cpath d='M130,12 C160,5 195,25 188,55 C180,85 210,105 185,125 C160,145 125,120 115,90 C105,60 100,19 130,12 Z' fill='%2325351C'/%3E%3Cpath d='M75,130 C105,118 140,140 132,175 C124,210 75,215 55,190 C35,165 45,142 75,130 Z' fill='%235B4629'/%3E%3Cpath d='M165,145 C190,138 215,165 205,195 C195,225 150,215 145,185 C140,155 140,152 165,145 Z' fill='%234A5D36'/%3E%3Ccircle cx='102' cy='62' r='16' fill='%23B86A35' opacity='0.55'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+}
+
+.chainlink-bg {
+  background-image: 
+    linear-gradient(45deg, rgba(150, 150, 150, 0.14) 25%, transparent 25%, transparent 75%, rgba(150, 150, 150, 0.14) 75%, rgba(150, 150, 150, 0.14)),
+    linear-gradient(-45deg, rgba(150, 150, 150, 0.14) 25%, transparent 25%, transparent 75%, rgba(150, 150, 150, 0.14) 75%, rgba(150, 150, 150, 0.14));
+  background-size: 26px 26px;
+}
+
+.saucy-card {
+  background-color: var(--bg-card);
+  border: 2.5px solid var(--border-color);
+  box-shadow: 5px 5px 0px var(--border-color);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.saucy-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 8px 8px 0px #D9531E;
+}

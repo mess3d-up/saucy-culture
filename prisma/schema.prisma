@@ -1,0 +1,43 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  slug        String   @unique
+  name        String
+  category    String
+  collection  String
+  price       Int
+  compareAt   Int
+  badge       String
+  spec        String
+  svgType     String
+  stock       Int      @default(50)
+  createdAt   DateTime @default(now())
+}
+
+model Order {
+  id            String   @id @default(cuid())
+  orderNumber   String   @unique
+  customerName  String
+  customerPhone String
+  shippingAddr  String
+  itemsJson     String
+  totalINR      Int
+  paymentStatus String   @default("PAYMENT_ON_HOLD")
+  createdAt     DateTime @default(now())
+}
+
+model CircleMember {
+  id            String   @id @default(cuid())
+  nickname      String
+  whatsappPhone String   @unique
+  preferredSize String   @default("L")
+  joinedAt      DateTime @default(now())
+}
