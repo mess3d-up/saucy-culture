@@ -11,3 +11,5 @@ coverage/
 dist/
 build/
 prisma/dev.db
+.vercel
+.env*
