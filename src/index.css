@@ -1,0 +1,31 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --sc-bg: #ffffff;
+    --sc-surface: #f7f7f7;
+    --sc-surface-elevated: #ffffff;
+    --sc-border: #e5e5e5;
+    --sc-ink: #111111;
+    --sc-muted: #525252;
+    --sc-orange: #e0531f;
+    --sc-crimson: #d9264e;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--sc-bg);
+    color: var(--sc-ink);
+  }
+}
+
+.font-display {
+  font-family: 'Anton', Impact, sans-serif;
+  letter-spacing: 0.02em;
+}
+
+.font-graffiti {
+  font-family: 'Permanent Marker', cursive;
+}

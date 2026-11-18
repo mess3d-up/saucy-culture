@@ -1,0 +1,1254 @@
+# SAUCY CULTURE
+### Basketball × Streetwear — Developer Documentation & Project Handover
+
+**Live Website:** https://www.saucyculture.in  
+**GitHub Repository:** https://github.com/mess3d-up/saucy-culture  
+**Hosting:** Vercel  
+**Database:** Prisma Postgres (PostgreSQL)  
+**Domain Registrar:** GoDaddy  
+**Primary Branch:** `main`
+
+---
+
+# 1. Project Overview
+
+## What is Saucy Culture?
+
+Saucy Culture is an India-focused basketball and streetwear e-commerce storefront built around basketball culture, oversized apparel, graphic designs, and limited product drops.
+
+The brand positioning is:
+
+**"The New Hoop Era — Basketball × Streetwear."**
+
+The website acts as the brand's online storefront, allowing visitors to:
+
+- Browse available streetwear products.
+- Explore different product categories.
+- Search the product catalogue.
+- Select clothing sizes.
+- Add products to a shopping bag.
+- Submit orders with customer and delivery details.
+- Join the Saucy Culture VIP community (Our Circle).
+- View an oversized clothing size chart.
+
+It also includes an owner-facing administration dashboard for viewing orders and VIP members.
+
+The project is designed for the Indian market, with product pricing in INR (₹) and Cash on Delivery (COD) represented in the current order workflow.
+
+## Brand identity and visual direction
+
+The website uses a basketball-inspired streetwear aesthetic.
+
+Key visual elements include:
+
+- Basketball and graffiti-inspired branding.
+- Ape mascot illustrations.
+- Camouflage patterns.
+- Dark forest green, burnt orange, cream, and charcoal colours.
+- Heavy typography and oversized headings.
+- Animated promotional banners.
+- Basketball jersey and apparel illustrations.
+
+Typography:
+
+- Anton
+- Bebas Neue
+- Permanent Marker
+- Plus Jakarta Sans
+
+The website includes two visual themes:
+- Day Court
+- Night Court
+
+---
+
+# 2. Live Infrastructure
+
+The project is deployed using the following architecture:
+
+| Component | Service |
+|---|---|
+| Source code | GitHub |
+| Repository | `mess3d-up/saucy-culture` |
+| Frontend | Next.js |
+| Backend/API | Next.js API Routes |
+| Database ORM | Prisma |
+| Database | Prisma Postgres |
+| Hosting | Vercel |
+| Domain | GoDaddy |
+| Production domain | `www.saucyculture.in` |
+
+### Architecture overview
+
+```text
+                    CUSTOMER
+                       |
+                       v
+              www.saucyculture.in
+                       |
+                       v
+                    VERCEL
+                       |
+              Next.js Application
+                       |
+             +---------+---------+
+             |                   |
+             v                   v
+         Storefront          API Routes
+             |                   |
+             |          +--------+--------+
+             |          |        |        |
+             v          v        v        v
+         Products     Products  Orders  Circle
+                         API      API     API
+                                  |
+                                  v
+                              Prisma ORM
+                                  |
+                                  v
+                           PRISMA POSTGRES
+                              PostgreSQL
+```
+
+### Deployment workflow
+
+The production deployment is connected to GitHub.
+
+Whenever changes are pushed to the `main` branch:
+
+1. GitHub receives the updated source code.
+2. Vercel detects the new commit.
+3. Vercel installs dependencies.
+4. Prisma Client is generated.
+5. Next.js performs a production build.
+6. Vercel deploys the updated application.
+
+The Linux development machine does not need to remain online for the website to work.
+
+---
+
+# 3. Technology Stack
+
+| Technology | Purpose |
+|---|---|
+| Next.js 14.2.15 | Full-stack React framework |
+| React 18 | Frontend UI |
+| TypeScript 5.5 | Type safety |
+| Tailwind CSS 3.4 | Styling |
+| Prisma ORM 5.22 | Database access |
+| PostgreSQL | Persistent database |
+| Prisma Client | Database queries |
+| Node.js | JavaScript runtime |
+| npm | Package management |
+| Vercel | Deployment and hosting |
+| Git/GitHub | Version control |
+
+### Important configuration
+
+The project uses the Next.js App Router.
+
+The `@/*` TypeScript path alias points to the project root.
+
+For example:
+
+```typescript
+import { prisma } from "@/lib/prisma";
+```
+
+This resolves to:
+
+```text
+lib/prisma.ts
+```
+
+---
+
+# 4. Project Structure
+
+Current repository structure:
+
+```text
+saucy-culture/
+│
+├── app/
+│   ├── admin/
+│   │   └── page.tsx
+│   │
+│   ├── api/
+│   │   ├── circle/
+│   │   │   └── route.ts
+│   │   │
+│   │   ├── orders/
+│   │   │   └── route.ts
+│   │   │
+│   │   └── products/
+│   │       └── route.ts
+│   │
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── page.tsx
+│
+├── lib/
+│   └── prisma.ts
+│
+├── prisma/
+│   ├── schema.prisma
+│   ├── seed.ts
+│   └── dev.db
+│
+├── .gitignore
+├── package.json
+├── package-lock.json
+├── postcss.config.js
+├── tailwind.config.ts
+├── tsconfig.json
+└── next-env.d.ts
+```
+
+Note: `prisma/dev.db` is a local SQLite database from the earlier development setup. It is excluded from Git and is not the production database.
+
+## Important files
+
+### `app/page.tsx`
+
+Main storefront.
+
+Contains:
+- Homepage and promotional sections.
+- Product catalogue.
+- Product search and category filters.
+- Product size selection.
+- Shopping bag.
+- Order submission form.
+- VIP membership form.
+- Size chart.
+- Day/Night theme switching.
+
+### `app/layout.tsx`
+
+Root application layout.
+
+Contains:
+- Global CSS import.
+- Website metadata.
+- Google Fonts integration.
+- Root HTML and body structure.
+
+### `app/globals.css`
+
+Contains:
+- Tailwind directives.
+- Day and Night theme variables.
+- Typography classes.
+- Brand styling.
+- Marquee animation.
+- Camouflage and chain-link backgrounds.
+- Product card styling.
+
+### `app/admin/page.tsx`
+
+Owner-facing administration dashboard.
+
+Contains:
+- Incoming orders.
+- Customer information.
+- Order totals.
+- Payment status.
+- COD confirmation action.
+- Dispatch status action.
+- VIP community member information.
+
+### `lib/prisma.ts`
+
+Central Prisma Client initialization.
+
+All API routes use this shared database client.
+
+### `prisma/schema.prisma`
+
+Defines the PostgreSQL database structure.
+
+### `prisma/seed.ts`
+
+Contains the initial product catalogue and database seeding logic.
+
+---
+
+# 5. Storefront Functionality
+
+## Homepage
+
+The homepage is built around the Saucy Culture brand identity.
+
+Main sections include:
+
+1. Promotional announcement marquee.
+2. Sticky navigation.
+3. Brand logo and ape mascot.
+4. Hero section — The New Hoop Era.
+5. Shop the Drop CTA.
+6. Join Our Circle CTA.
+7. Product catalogue.
+8. VIP membership section.
+9. Shopping bag and checkout interface.
+10. Clothing size chart.
+
+The promotional banner currently communicates:
+- All-Star Camo Drop.
+- Free shipping across India above ₹1,999.
+- Heavyweight hoodies and pro-mesh shorts.
+
+These promotional values are currently frontend content and should be updated whenever the business policy or campaign changes.
+
+## Product catalogue
+
+Products are retrieved from the database through:
+
+```http
+GET /api/products
+```
+
+Products are displayed with:
+
+- Product name.
+- Category.
+- Collection.
+- Price.
+- Compare-at price.
+- Product badge.
+- Product specification.
+- Size selection.
+- Add to Bag functionality.
+
+Available categories:
+
+| Category | Description |
+|---|---|
+| Jerseys | Basketball jerseys |
+| Hoodies | Heavyweight hoodies |
+| Shorts | Basketball and streetwear shorts |
+| Tees | Oversized T-shirts |
+
+The storefront supports:
+- Search by product name.
+- Search by product specification.
+- Category filtering.
+- Size selection: S, M, L, XL, XXL.
+- Adding products to the shopping bag.
+- Quantity modification.
+- Automatic total calculation.
+
+### Product illustrations
+
+Product illustrations are currently generated using inline SVG components in `app/page.tsx`.
+
+The `svgType` field in the database determines which illustration is rendered.
+
+Examples:
+
+```text
+jersey-camo
+jersey-black
+hoodie-green
+hoodie-black
+shorts-camo
+shorts-green
+tee-charcoal
+tee-cream
+```
+
+Adding a new product illustration requires updating the SVG rendering logic as well as the product data.
+
+---
+
+# 6. Database Architecture
+
+## Database provider
+
+The original local development setup used SQLite.
+
+During deployment, the project was migrated to PostgreSQL using Prisma Postgres.
+
+Current production configuration:
+
+```prisma
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL_POOLED")
+  directUrl = env("DATABASE_URL")
+}
+```
+
+Important distinction:
+
+- `DATABASE_URL_POOLED`: Used for normal application database connections.
+- `DATABASE_URL`: Direct database connection, used by Prisma CLI for schema operations.
+
+The database is hosted independently of the Vercel application.
+
+## Database models
+
+Currently, there are three main database models.
+
+### Product
+
+Stores the product catalogue.
+
+| Field | Type | Purpose |
+|---|---|---|
+| id | Int | Primary key |
+| slug | String | Unique product identifier |
+| name | String | Product name |
+| category | String | Product category |
+| collection | String | Collection name |
+| price | Int | Selling price in INR |
+| compareAt | Int | Original/comparison price |
+| badge | String | Promotional product label |
+| spec | String | Product specifications |
+| svgType | String | SVG illustration identifier |
+| stock | Int | Stock quantity |
+| createdAt | DateTime | Creation timestamp |
+
+The stock field defaults to 50.
+
+### Order
+
+Stores customer order information.
+
+| Field | Type | Purpose |
+|---|---|---|
+| id | String | Primary key |
+| orderNumber | String | Unique order reference |
+| customerName | String | Customer name |
+| customerPhone | String | Contact number |
+| shippingAddr | String | Delivery address |
+| itemsJson | String | Purchased items stored as JSON |
+| totalINR | Int | Total order value |
+| paymentStatus | String | Order/payment status |
+| createdAt | DateTime | Order timestamp |
+
+Default payment status:
+
+```text
+PAYMENT_ON_HOLD
+```
+
+### CircleMember
+
+Stores VIP community registrations.
+
+| Field | Type | Purpose |
+|---|---|---|
+| id | String | Primary key |
+| nickname | String | Customer nickname |
+| whatsappPhone | String | Unique WhatsApp number |
+| preferredSize | String | Preferred clothing size |
+| joinedAt | DateTime | Membership timestamp |
+
+The WhatsApp number is unique to prevent duplicate membership records.
+
+---
+
+# 7. API Documentation
+
+All API endpoints are implemented using Next.js Route Handlers.
+
+Base URL:
+
+```text
+https://www.saucyculture.in/api
+```
+
+## Products API
+
+### GET /api/products
+
+Retrieves all products.
+
+Implementation:
+
+```typescript
+prisma.product.findMany({
+  orderBy: { id: "asc" }
+});
+```
+
+Used by the storefront to populate the product catalogue.
+
+## Orders API
+
+### GET /api/orders
+
+Retrieves orders, sorted by creation date in descending order.
+
+Used by the admin dashboard.
+
+### POST /api/orders
+
+Creates a new order.
+
+Expected request data:
+
+```json
+{
+  "customerName": "Customer Name",
+  "customerPhone": "9876543210",
+  "shippingAddr": "Full delivery address",
+  "items": [
+    {
+      "productId": 1,
+      "name": "Product Name",
+      "size": "L",
+      "qty": 1,
+      "price": 1899
+    }
+  ],
+  "totalINR": 1899
+}
+```
+
+A unique order reference is generated in this format:
+
+```text
+SC-IN-123456
+```
+
+The initial payment status is:
+
+```text
+PAYMENT_ON_HOLD
+```
+
+The API currently stores order item details as JSON in `itemsJson`.
+
+### PATCH /api/orders
+
+Updates an order's payment status.
+
+Expected request:
+
+```json
+{
+  "id": "ORDER_DATABASE_ID",
+  "paymentStatus": "COD_CONFIRMED"
+}
+```
+
+The admin dashboard currently uses these status values:
+
+```text
+PAYMENT_ON_HOLD
+COD_CONFIRMED
+DISPATCHED
+```
+
+## Circle API
+
+### GET /api/circle
+
+Retrieves registered VIP members, sorted by newest membership first.
+
+### POST /api/circle
+
+Registers a new VIP member.
+
+Expected request:
+
+```json
+{
+  "nickname": "Court Nickname",
+  "whatsappPhone": "9876543210",
+  "preferredSize": "L"
+}
+```
+
+The API uses Prisma `upsert`.
+
+If the WhatsApp number already exists, the existing member's nickname and preferred size are updated.
+
+The current API returns:
+
+```text
+SAUCYVIP10
+```
+
+as the VIP code.
+
+---
+
+# 8. Admin Dashboard
+
+URL:
+
+```text
+https://www.saucyculture.in/admin
+```
+
+The dashboard currently provides two sections.
+
+## Incoming Orders
+
+Displays:
+- Order reference.
+- Customer name.
+- Phone number.
+- Delivery address.
+- Purchased products.
+- Selected sizes.
+- Quantities.
+- Order total.
+- Payment status.
+
+Available actions:
+
+**Confirm COD**
+
+Updates the order status to:
+
+```text
+COD_CONFIRMED
+```
+
+**Mark Dispatched**
+
+Updates the order status to:
+
+```text
+DISPATCHED
+```
+
+## VIP Members
+
+Displays:
+- Nickname.
+- WhatsApp number.
+- Preferred size.
+- Membership information.
+
+### Important admin security warning
+
+The current repository implementation does not show authentication or authorization protecting `/admin` or the order management API.
+
+The current `GET /api/orders` endpoint returns order records, and `PATCH /api/orders` allows status changes without an authorization check.
+
+**This must be fixed before using the website for real customer orders.**
+
+Recommended improvements:
+
+1. Implement secure admin authentication.
+2. Protect `/admin` with server-side authorization.
+3. Restrict `GET /api/orders` to authenticated administrators.
+4. Restrict `PATCH /api/orders` to authenticated administrators.
+5. Add server-side request validation.
+6. Add rate limiting to public forms.
+7. Avoid exposing customer addresses and phone numbers publicly.
+
+Do not treat the current admin page as a secure private back office.
+
+---
+
+# 9. Order and Payment Workflow
+
+The current order process is:
+
+```text
+Customer visits website
+         |
+         v
+Browses products
+         |
+         v
+Selects size and adds to bag
+         |
+         v
+Reviews cart
+         |
+         v
+Enters customer information
+         |
+         v
+Submits order
+         |
+         v
+POST /api/orders
+         |
+         v
+Order saved in PostgreSQL
+         |
+         v
+Payment status: PAYMENT_ON_HOLD
+         |
+         v
+Owner reviews order in /admin
+         |
+         v
+COD confirmation
+         |
+         v
+Dispatch status update
+```
+
+### Current payment implementation
+
+The current checkout is a COD/payment-hold workflow.
+
+There is no verified integration in the current codebase for:
+
+- Razorpay.
+- Stripe.
+- UPI payment processing.
+- Payment gateway webhooks.
+- Automatic payment confirmation.
+
+The order submission currently creates an order record; it does not collect or verify payment.
+
+A future developer should implement a proper payment integration if online payments are required.
+
+---
+
+# 10. Initial Product Catalogue
+
+The repository's seed file currently defines eight products.
+
+| Product | Category | Price |
+|---|---|---:|
+| '99 Camo Jersey | Jerseys | ₹1,899 |
+| Saucy Hoop Hoodie | Hoodies | ₹2,499 |
+| Bape-Court Camo Shorts | Shorts | ₹1,599 |
+| Drip Ape Pump-Cover Tee | Tees | ₹1,399 |
+| Pine Court Mesh Shorts | Shorts | ₹1,499 |
+| Blackout Ape Hoodie | Hoodies | ₹2,599 |
+| Concrete King Oversized Tee | Tees | ₹1,299 |
+| Reversible Tourney Jersey | Jerseys | ₹2,199 |
+
+The seed script uses Prisma `upsert` based on product slug.
+
+This means running the seed script again updates existing products with the same slug rather than creating duplicate records.
+
+**Important:** The seed file defines the initial catalogue, but that does not automatically prove that all eight products are currently present in the production database. Check the production database before assuming it has been seeded.
+
+---
+
+# 11. Local Development Setup
+
+## Requirements
+
+Install:
+
+- Node.js
+- npm
+- Git
+- A code editor (VS Code recommended)
+
+## Step 1. Clone the repository
+
+```bash
+git clone https://github.com/mess3d-up/saucy-culture.git
+```
+
+Enter the project:
+
+```bash
+cd saucy-culture
+```
+
+## Step 2. Install dependencies
+
+```bash
+npm install
+```
+
+## Step 3. Configure environment variables
+
+Create a `.env` file in the project root.
+
+Required variables:
+
+```env
+DATABASE_URL="YOUR_DIRECT_POSTGRESQL_CONNECTION_STRING"
+
+DATABASE_URL_POOLED="YOUR_POOLED_POSTGRESQL_CONNECTION_STRING"
+```
+
+Never commit this file to GitHub.
+
+Never share actual database credentials in screenshots, documentation, or public messages.
+
+## Step 4. Generate Prisma Client
+
+```bash
+npx prisma generate
+```
+
+## Step 5. Synchronize the database schema
+
+```bash
+npx prisma db push
+```
+
+This creates or synchronizes database tables based on `prisma/schema.prisma`.
+
+## Step 6. Seed the product catalogue
+
+```bash
+npm run db:seed
+```
+
+This executes:
+
+```text
+prisma/seed.ts
+```
+
+## Step 7. Start the development server
+
+```bash
+npm run dev
+```
+
+Open:
+
+```text
+http://localhost:3000
+```
+
+---
+
+# 12. Available npm Scripts
+
+Defined in `package.json`:
+
+| Command | Purpose |
+|---|---|
+| `npm run dev` | Start development server |
+| `npm run build` | Generate Prisma Client and build Next.js |
+| `npm run start` | Start production Next.js server |
+| `npm run db:push` | Synchronize Prisma schema with database |
+| `npm run db:seed` | Seed initial product catalogue |
+| `npm run setup` | Install packages, push schema and seed |
+
+The setup script is:
+
+```json
+"setup": "npm install && npx prisma db push && npx tsx prisma/seed.ts"
+```
+
+Use this for a fresh development environment only after configuring the correct database connection.
+
+Do not blindly run database setup scripts against production without checking the target database and understanding the changes.
+
+---
+
+# 13. Production Deployment on Vercel
+
+## Current production configuration
+
+- Hosting provider: Vercel
+- Connected GitHub repository: `mess3d-up/saucy-culture`
+- Production branch: `main`
+- Framework: Next.js
+- Database: Prisma Postgres
+- Database provider: PostgreSQL
+
+## Build command
+
+The project's `package.json` defines:
+
+```bash
+prisma generate && next build
+```
+
+Vercel uses the project's build configuration to generate Prisma Client before building the application.
+
+## Environment variables
+
+The following database variables are configured through the Vercel project/integration:
+
+| Variable | Purpose |
+|---|---|
+| `DATABASE_URL` | Direct PostgreSQL connection |
+| `DATABASE_URL_POOLED` | Pooled PostgreSQL connection |
+| `POSTGRES_URL` | Integration-provided PostgreSQL connection |
+| `PRISMA_DATABASE_URL` | Integration-provided Prisma connection |
+
+The Prisma schema currently uses the first two variables.
+
+Do not hardcode connection strings into source code.
+
+## Deployment procedure
+
+1. Make code changes locally.
+2. Test the changes.
+3. Commit the changes.
+4. Push to GitHub `main`.
+5. Wait for Vercel to detect the commit.
+6. Review the build logs.
+7. Verify the production deployment.
+
+Commands:
+
+```bash
+git add .
+git commit -m "Describe your changes"
+git push origin main
+```
+
+Vercel automatically handles the connected production deployment.
+
+---
+
+# 14. Domain and DNS Configuration
+
+## Registered domain
+
+```text
+saucyculture.in
+```
+
+Domain registrar:
+
+```text
+GoDaddy
+```
+
+Hosting provider:
+
+```text
+Vercel
+```
+
+The root domain redirects to the WWW domain.
+
+Primary website:
+
+```text
+https://www.saucyculture.in
+```
+
+Redirect:
+
+```text
+https://saucyculture.in
+          |
+          v
+https://www.saucyculture.in
+```
+
+## Current DNS configuration
+
+The following records were configured during the Vercel connection process:
+
+| Type | Host | Value |
+|---|---|---|
+| A | @ | 216.198.79.1 |
+| CNAME | www | 7ab29c1c0c58b974.vercel-dns-017.com |
+
+Vercel manages SSL certificate provisioning.
+
+Do not change DNS records without checking the current Vercel domain instructions.
+
+The following existing GoDaddy records were preserved:
+
+- Nameserver records.
+- SOA record.
+- `_domainconnect` CNAME.
+- `_dmarc` TXT record.
+
+These may be important for domain management and email configuration.
+
+---
+
+# 15. Git and Version Control
+
+Repository:
+
+```text
+https://github.com/mess3d-up/saucy-culture
+```
+
+Primary branch:
+
+```text
+main
+```
+
+Git remote:
+
+```text
+origin
+```
+
+Check the current state:
+
+```bash
+git status
+```
+
+View remote:
+
+```bash
+git remote -v
+```
+
+Pull latest changes:
+
+```bash
+git pull origin main
+```
+
+Push changes:
+
+```bash
+git add .
+git commit -m "Update website"
+git push origin main
+```
+
+## Files intentionally excluded from Git
+
+The current `.gitignore` excludes:
+
+```text
+node_modules/
+.next/
+out/
+.vercel/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+coverage/
+dist/
+build/
+prisma/dev.db
+```
+
+This keeps local dependencies, generated build files, environment secrets, and the old SQLite database out of the public repository.
+
+**Never remove the `.gitignore` exclusions for environment files or local databases without a deliberate reason.**
+
+---
+
+# 16. Important Known Limitations and Development Notes
+
+This section is particularly important for the next developer.
+
+The following points are based on the current repository implementation, not assumptions about future functionality.
+
+## A. Database migration
+
+The project was originally developed using SQLite.
+
+The Prisma datasource was changed to PostgreSQL during production deployment.
+
+The PostgreSQL schema was synchronized using:
+
+```bash
+npx prisma db push
+```
+
+The previous SQLite database was not deleted.
+
+However, synchronizing the schema does not automatically migrate existing SQLite records.
+
+Any existing development product, order, or member records must be migrated separately if they need to be retained.
+
+## B. Product catalogue seeding
+
+The seed script contains eight products.
+
+Run:
+
+```bash
+npm run db:seed
+```
+
+to populate the connected database.
+
+Verify the production catalogue after seeding.
+
+## C. Stock management
+
+A `stock` field exists in the Product model.
+
+The current order API does not implement a complete inventory reservation or stock deduction workflow.
+
+A future developer should implement:
+- Stock availability checks.
+- Stock validation at checkout.
+- Stock decrement after confirmed orders.
+- Protection against overselling.
+
+## D. Checkout validation
+
+The current order endpoint accepts submitted customer and cart data.
+
+Implement server-side validation before relying on it for production commerce.
+
+The server should independently verify:
+- Product IDs.
+- Current product prices.
+- Product availability.
+- Requested quantities.
+- Valid customer details.
+- Order totals.
+
+Never trust the total price calculated by the browser.
+
+## E. Authentication
+
+The current admin interface and order management endpoints need authentication and authorization.
+
+This is a high-priority production improvement.
+
+## F. Payment integration
+
+The current order workflow represents COD/payment-hold orders.
+
+No live payment gateway is implemented in the current repository.
+
+## G. Product imagery
+
+The current product visuals are generated using inline SVG illustrations.
+
+Real product photography can be introduced later without changing the overall architecture, provided the product rendering component is updated.
+
+## H. Shopping bag initialization
+
+The current storefront initializes the cart with the first two products returned by the products API when at least two products exist.
+
+A future developer should confirm whether this is intentional or remove it if customers should start with an empty cart.
+
+---
+
+# 17. Recommended Development Roadmap
+
+Suggested priorities for the next development phase:
+
+### Priority 1 — Security
+
+- Add admin login.
+- Protect admin dashboard routes.
+- Protect order GET and PATCH endpoints.
+- Validate all incoming API data.
+- Add rate limiting.
+- Review customer data exposure.
+
+### Priority 2 — E-commerce functionality
+
+- Implement proper payment processing.
+- Add stock management.
+- Add order status lifecycle.
+- Add customer order confirmation.
+- Add order cancellation handling.
+- Add order notifications.
+
+### Priority 3 — Store management
+
+- Product creation and editing.
+- Product deletion.
+- Price management.
+- Stock management.
+- Product image uploads.
+- Collection management.
+
+### Priority 4 — Customer experience
+
+- Persistent shopping bag.
+- Better mobile navigation.
+- Product detail pages.
+- Product image galleries.
+- Order tracking.
+- Shipping and return policy pages.
+- Privacy policy and terms of service.
+
+### Priority 5 — Growth and analytics
+
+- Google Analytics 4.
+- Conversion tracking.
+- Meta Pixel, if required.
+- Search engine optimization.
+- Product structured data.
+- Performance optimization.
+- Email marketing integration.
+
+---
+
+# 18. Troubleshooting Guide
+
+| Problem | What to check |
+|---|---|
+| Vercel build fails | Review deployment build logs |
+| Prisma cannot find DATABASE_URL | Check Vercel environment variables |
+| Prisma asks for `file:` URL | Check that provider is `postgresql`, not `sqlite` |
+| DATABASE_URL_POOLED missing | Check Vercel integration and local environment |
+| Product catalogue is empty | Check PostgreSQL records and seed execution |
+| API returns database error | Verify connection strings and database availability |
+| GitHub authentication fails | Use a GitHub Personal Access Token or SSH |
+| Domain shows invalid configuration | Check GoDaddy DNS records in Vercel |
+| SSL certificate pending | Check DNS propagation and Vercel domain verification |
+| Admin page does not show orders | Check API responses and database records |
+
+---
+
+# 19. Important Developer Rules
+
+Anyone taking over this project should follow these rules:
+
+1. Always inspect the existing implementation before modifying core functionality.
+2. Do not change the Prisma database provider without a migration plan.
+3. Do not commit `.env`, `.env.local`, or database credentials.
+4. Do not delete the local SQLite database without confirming its contents are no longer required.
+5. Do not run production database migrations blindly.
+6. Test the local build before pushing changes.
+7. Check Vercel build logs after every production deployment.
+8. Keep the GitHub `main` branch deployable.
+9. Protect customer information and administrative operations.
+10. Document database schema changes and new environment variables.
+
+---
+
+# 20. Quick Reference
+
+| Item | Value |
+|---|---|
+| Brand | Saucy Culture |
+| Website | https://www.saucyculture.in |
+| GitHub | https://github.com/mess3d-up/saucy-culture |
+| Hosting | Vercel |
+| Domain registrar | GoDaddy |
+| Database | Prisma Postgres |
+| ORM | Prisma 5.22 |
+| Framework | Next.js 14 |
+| React | 18 |
+| Styling | Tailwind CSS 3 |
+| Language | TypeScript |
+| Main branch | main |
+| Main storefront | `app/page.tsx` |
+| Admin dashboard | `app/admin/page.tsx` |
+| Database schema | `prisma/schema.prisma` |
+| Seed data | `prisma/seed.ts` |
+| Prisma client | `lib/prisma.ts` |
+
+---
+
+# Final Handover Summary
+
+Saucy Culture is a Next.js-based basketball and streetwear storefront deployed on Vercel, with its source code maintained in GitHub and its production database hosted on Prisma Postgres.
+
+The project currently supports product browsing, search, category filtering, size selection, shopping bag management, COD/payment-hold order creation, VIP community registration, and an owner-facing order/member dashboard.
+
+The production database uses PostgreSQL through Prisma ORM. The website is connected to its custom GoDaddy-registered domain, `saucyculture.in`, with Vercel handling application hosting and SSL.
+
+The next developer should first understand the existing storefront, API routes, database models, and deployment workflow before making changes.
+
+The highest-priority outstanding work is securing administrative and customer-data endpoints, implementing server-side order validation, confirming production product seeding, completing inventory management, and integrating a real payment provider if online payments are required.
+
+**The objective is to maintain a reliable, secure, scalable e-commerce platform while preserving the Saucy Culture brand identity and customer experience.**
+
+---
+
+**Documentation maintained for:** Saucy Culture  
+**Repository:** `mess3d-up/saucy-culture`  
+**Document purpose:** Technical documentation, onboarding, and developer handover.

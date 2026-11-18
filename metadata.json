@@ -1,0 +1,6 @@
+{
+  "name": "Saucy Culture",
+  "description": "Saucy Culture — The New Hoop Era. Indian basketball × streetwear e-commerce storefront with COD, zero-fee UPI, order tracking, and admin console.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
